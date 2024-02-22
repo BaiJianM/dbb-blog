@@ -10,11 +10,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.ld</groupId>
-    <artifactId>poetry</artifactId>
+    <groupId>top.dabaibai</groupId>
+    <artifactId>dbb-blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>poetry</name>
-    <description>poetry</description>
+    <name>dbb-blog</name>
+    <description>dbb-blog</description>
 
     <dependencies>
         <dependency>
