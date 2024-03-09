@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import top.dabaibai.blog.dao.HistoryInfoMapper;
 import top.dabaibai.blog.dao.WebInfoMapper;
 import top.dabaibai.blog.entity.*;
-import top.dabaibai.blog.im.websocket.TioWebsocketStarter;
 import top.dabaibai.blog.service.FamilyService;
 import top.dabaibai.blog.service.UserService;
 import top.dabaibai.blog.utils.CommonConst;
@@ -48,9 +47,6 @@ public class PoetryApplicationRunner implements ApplicationRunner {
     @Autowired
     private HistoryInfoMapper historyInfoMapper;
 
-    @Autowired
-    private TioWebsocketStarter tioWebsocketStarter;
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
         LambdaQueryChainWrapper<WebInfo> wrapper = new LambdaQueryChainWrapper<>(webInfoMapper);
@@ -85,6 +81,5 @@ public class PoetryApplicationRunner implements ApplicationRunner {
         history.put(CommonConst.IP_HISTORY_COUNT, historyInfoMapper.getHistoryCount());
         PoetryCache.put(CommonConst.IP_HISTORY_STATISTICS, history);
 
-        tioWebsocketStarter.start();
     }
 }

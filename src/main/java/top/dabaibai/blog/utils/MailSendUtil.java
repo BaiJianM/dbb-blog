@@ -4,7 +4,6 @@ import top.dabaibai.blog.entity.Article;
 import top.dabaibai.blog.entity.Comment;
 import top.dabaibai.blog.entity.User;
 import top.dabaibai.blog.entity.WebInfo;
-import top.dabaibai.blog.im.http.entity.ImChatUserMessage;
 import top.dabaibai.blog.service.CommentService;
 import top.dabaibai.blog.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,36 +107,6 @@ public class MailSendUtil {
                 fromContent,
                 toMail,
                 webName);
-    }
-
-    public void sendImMail(ImChatUserMessage message) {
-        if (!message.getMessageStatus()) {
-            List<String> mail = new ArrayList<>();
-            String username = "";
-            User toUser = commonQuery.getUser(message.getToId());
-            if (toUser != null && StringUtils.hasText(toUser.getEmail())) {
-                mail.add(toUser.getEmail());
-            }
-            User fromUser = commonQuery.getUser(message.getFromId());
-            if (fromUser != null) {
-                username = fromUser.getUsername();
-            }
-
-            if (!CollectionUtils.isEmpty(mail)) {
-                String commentMail = getImMail(username, message.getContent());
-
-                AtomicInteger count = (AtomicInteger) PoetryCache.get(CommonConst.COMMENT_IM_MAIL + mail.get(0));
-                if (count == null || count.get() < CommonConst.COMMENT_IM_MAIL_COUNT) {
-                    WebInfo webInfo = (WebInfo) PoetryCache.get(CommonConst.WEB_INFO);
-                    mailUtil.sendMailMessage(mail, "您有一封来自" + (webInfo == null ? "Poetize" : webInfo.getWebName()) + "的回执！", commentMail);
-                    if (count == null) {
-                        PoetryCache.put(CommonConst.COMMENT_IM_MAIL + mail.get(0), new AtomicInteger(1), CommonConst.CODE_EXPIRE);
-                    } else {
-                        count.incrementAndGet();
-                    }
-                }
-            }
-        }
     }
 
     private String getImMail(String fromName, String fromContent) {

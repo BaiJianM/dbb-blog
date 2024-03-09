@@ -9,7 +9,6 @@ import top.dabaibai.blog.dao.TreeHoleMapper;
 import top.dabaibai.blog.dao.WebInfoMapper;
 import top.dabaibai.blog.entity.*;
 import top.dabaibai.blog.entity.*;
-import top.dabaibai.blog.im.websocket.TioWebsocketStarter;
 import top.dabaibai.blog.service.ArticleService;
 import top.dabaibai.blog.service.CommentService;
 import top.dabaibai.blog.service.UserService;
@@ -42,9 +41,6 @@ public class AdminController {
 
     @Autowired
     private TreeHoleMapper treeHoleMapper;
-
-    @Autowired
-    private TioWebsocketStarter tioWebsocketStarter;
 
     /**
      * 查询用户
@@ -115,7 +111,6 @@ public class AdminController {
             PoetryCache.remove(CommonConst.USER_TOKEN + userId);
             PoetryCache.remove(token);
         }
-        Tio.removeUser(tioWebsocketStarter.getServerTioConfig(), String.valueOf(userId), "remove user");
     }
 
     /**

@@ -11,12 +11,6 @@ import top.dabaibai.blog.entity.User;
 import top.dabaibai.blog.entity.WebInfo;
 import top.dabaibai.blog.entity.WeiYan;
 import top.dabaibai.blog.handle.PoetryRuntimeException;
-import top.dabaibai.blog.im.http.dao.ImChatGroupUserMapper;
-import top.dabaibai.blog.im.http.dao.ImChatUserFriendMapper;
-import top.dabaibai.blog.im.http.entity.ImChatGroupUser;
-import top.dabaibai.blog.im.http.entity.ImChatUserFriend;
-import top.dabaibai.blog.im.websocket.ImConfigConst;
-import top.dabaibai.blog.im.websocket.TioWebsocketStarter;
 import top.dabaibai.blog.service.UserService;
 import top.dabaibai.blog.service.WeiYanService;
 import top.dabaibai.blog.utils.*;
@@ -55,15 +49,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private WeiYanService weiYanService;
-
-    @Autowired
-    private ImChatGroupUserMapper imChatGroupUserMapper;
-
-    @Autowired
-    private ImChatUserFriendMapper imChatUserFriendMapper;
-
-    @Autowired
-    private TioWebsocketStarter tioWebsocketStarter;
 
     @Autowired
     private MailUtil mailUtil;
@@ -143,7 +128,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Integer userId = PoetryUtil.getUserId();
         if (token.contains(CommonConst.USER_ACCESS_TOKEN)) {
             PoetryCache.remove(CommonConst.USER_TOKEN + userId);
-            Tio.removeUser(tioWebsocketStarter.getServerTioConfig(), String.valueOf(userId), "remove user");
         } else if (token.contains(CommonConst.ADMIN_ACCESS_TOKEN)) {
             PoetryCache.remove(CommonConst.ADMIN_TOKEN + userId);
         }
@@ -226,25 +210,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         weiYan.setType(CommonConst.WEIYAN_TYPE_FRIEND);
         weiYan.setIsPublic(Boolean.TRUE);
         weiYanService.save(weiYan);
-
-        ImChatGroupUser imChatGroupUser = new ImChatGroupUser();
-        imChatGroupUser.setGroupId(ImConfigConst.DEFAULT_GROUP_ID);
-        imChatGroupUser.setUserId(one.getId());
-        imChatGroupUser.setUserStatus(ImConfigConst.GROUP_USER_STATUS_PASS);
-        imChatGroupUserMapper.insert(imChatGroupUser);
-
-        ImChatUserFriend imChatUser = new ImChatUserFriend();
-        imChatUser.setUserId(one.getId());
-        imChatUser.setFriendId(PoetryUtil.getAdminUser().getId());
-        imChatUser.setRemark("站长");
-        imChatUser.setFriendStatus(ImConfigConst.FRIEND_STATUS_PASS);
-        imChatUserFriendMapper.insert(imChatUser);
-
-        ImChatUserFriend imChatFriend = new ImChatUserFriend();
-        imChatFriend.setUserId(PoetryUtil.getAdminUser().getId());
-        imChatFriend.setFriendId(one.getId());
-        imChatFriend.setFriendStatus(ImConfigConst.FRIEND_STATUS_PASS);
-        imChatUserFriendMapper.insert(imChatFriend);
 
         return PoetryResult.success(userVO);
     }
@@ -553,7 +518,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserVO userVO = null;
         User one = lambdaQuery().eq(User::getId, PoetryUtil.getUserId()).one();
         List<Integer> sub = JSON.parseArray(one.getSubscribe(), Integer.class);
-        if (sub == null) sub = new ArrayList<>();
+        if (sub == null) {
+            sub = new ArrayList<>();
+        }
         if (flag) {
             if (!sub.contains(labelId)) {
                 sub.add(labelId);
