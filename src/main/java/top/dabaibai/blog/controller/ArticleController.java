@@ -2,6 +2,7 @@ package top.dabaibai.blog.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import top.dabaibai.blog.config.LoginCheck;
 import top.dabaibai.blog.config.PoetryResult;
 import top.dabaibai.blog.service.ArticleService;
@@ -26,6 +27,7 @@ import java.util.Map;
  * @author dabaibai
  * @since 2021-08-13
  */
+@Slf4j
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
@@ -85,6 +87,7 @@ public class ArticleController {
      */
     @GetMapping("/listSortArticle")
     public PoetryResult<Map<Integer, List<ArticleVO>>> listSortArticle() {
+        log.info("加个日志");
         return articleService.listSortArticle();
     }
 
