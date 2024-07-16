@@ -87,7 +87,6 @@ public class ArticleController {
      */
     @GetMapping("/listSortArticle")
     public PoetryResult<Map<Integer, List<ArticleVO>>> listSortArticle() {
-        log.error("加个日志");
         return articleService.listSortArticle();
     }
 

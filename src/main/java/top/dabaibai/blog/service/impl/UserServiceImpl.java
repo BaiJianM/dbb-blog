@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import top.dabaibai.blog.config.PoetryProperties;
 import top.dabaibai.blog.config.PoetryResult;
 import top.dabaibai.blog.dao.UserMapper;
 import top.dabaibai.blog.entity.User;
@@ -53,8 +54,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private MailUtil mailUtil;
 
-    @Value("${user.code.format}")
-    private String codeFormat;
+    @Autowired
+    private PoetryProperties properties;
 
     @Override
     public PoetryResult<UserVO> login(String account, String password, Boolean isAdmin) {
@@ -560,7 +561,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 webName,
                 String.format(MailUtil.imMail, PoetryUtil.getAdminUser().getUsername()),
                 PoetryUtil.getAdminUser().getUsername(),
-                String.format(codeFormat, i),
+                String.format(properties.getCodeFormat(), i),
                 "",
                 webName);
     }

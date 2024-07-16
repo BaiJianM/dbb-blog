@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import top.dabaibai.blog.config.PoetryProperties;
 import top.dabaibai.blog.config.PoetryResult;
 import top.dabaibai.blog.dao.ArticleMapper;
 import top.dabaibai.blog.dao.LabelMapper;
@@ -59,8 +60,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private LabelMapper labelMapper;
 
-    @Value("${user.subscribe.format}")
-    private String subscribeFormat;
+    @Autowired
+    private PoetryProperties properties;
 
     @Override
     public PoetryResult saveArticle(ArticleVO articleVO) {
@@ -122,7 +123,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 webName,
                 String.format(MailUtil.notificationMail, PoetryUtil.getAdminUser().getUsername()),
                 PoetryUtil.getAdminUser().getUsername(),
-                String.format(subscribeFormat, labelName, articleTitle),
+                String.format(properties.getSubscribeFormat(), labelName, articleTitle),
                 "",
                 webName);
     }

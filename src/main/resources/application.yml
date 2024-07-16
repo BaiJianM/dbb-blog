@@ -44,12 +44,6 @@ spring:
     username: root
     password: ^tPT4DwgTX9cKyOm
 
-user:
-  code:
-    format: "【poetize.cn】%s为本次验证的验证码，请在5分钟内完成验证。为保证账号安全，请勿泄漏此验证码。"
-  subscribe:
-    format: "【poetize.cn】您订阅的专栏【%s】新增一篇文章：%s。"
-
 store:
   type: qiniu
 
